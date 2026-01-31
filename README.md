@@ -3,25 +3,9 @@ Code and other information for UCR's CS 122 course. All material is attributed t
 
 ## Notes
 
-Here's a couople of notes to get things running. The objcopy command will be changed by a CMake target. In the meantime, run the following commands to get things working in a CodeSpace.
+Here's a couople of notes to get things running. 
 
-### Making Object Files from Images
-
-The following commands will set up the UCR Logo Bitmaps to be included in the executable.
-
-```sh
-arm-none-eabi-objcopy -I binary -O elf32-littlearm -B arm UC_Riverside_Vert_BluBG_sm.bmp image0.o
-arm-none-eabi-objcopy -I binary -O elf32-littlearm -B arm UC_Riverside_Vert_WhtBG_sm.bmp image1.o
-cp image0.o image1.o C2.6
-```
-
-One you've executed this commands, C2.6 should build properly. To build all the code type the following command:
-
-```sh
-make
-```
-
-### Running C2.6 in QEMU
+### Running in QEMU
 ```sh
 qemu-system-arm -M versatilepb -m 128M -kernel C2.6/vid.bin -serial mon:stdio
 ```

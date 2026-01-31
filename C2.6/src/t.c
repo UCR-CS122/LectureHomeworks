@@ -3,7 +3,7 @@
 #include "vid.h" // LCD driver
 #include "uart.h" // UART driver
 
-extern char _binary_UC_Riverside_Vert_BluBG_sm_bmp_start, _binary_UC_Riverside_Vert_WhtBG_sm_bmp_start;
+extern char image0_start, image1_start;
 
 UART *up;
 
@@ -40,11 +40,11 @@ int main() {
 
     uprintf(up, "Hello, World, %u\n", -1);
     while(1){
-        p = &_binary_UC_Riverside_Vert_BluBG_sm_bmp_start;
+        p = &image0_start;
         show_bmp(p, 0, 0); // display image1
         uprintf(up, "enter a key from this UART : ");
         ugetc(up);
-        p = &_binary_UC_Riverside_Vert_WhtBG_sm_bmp_start;
+        p = &image1_start;
         show_bmp(p,229, 321); // display image2
     }
 

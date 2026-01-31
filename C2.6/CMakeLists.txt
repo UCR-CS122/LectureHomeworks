@@ -9,6 +9,13 @@ add_executable(${TARGET_NAME}.elf
     src/t.c
 )
 
+add_custom_command(
+    TARGET ${TARGET_NAME}.elf
+    PRE_LINK
+    COMMAND ${CMAKE_OBJCOPY} ARGS -I binary -O elf32-littlearm -B arm --redefine-syms symbol_names_image0.txt ${PROJECT_SOURCE_DIR}/UC_Riverside_Vert_BluBG_sm.bmp image0.o
+    COMMAND ${CMAKE_OBJCOPY} ARGS -I binary -O elf32-littlearm -B arm --redefine-syms symbol_names_image1.txt ${PROJECT_SOURCE_DIR}/UC_Riverside_Vert_WhtBG_sm.bmp image1.o
+)
+
 add_custom_command(TARGET ${TARGET_NAME}.elf
     POST_BUILD
     COMMAND ${CMAKE_OBJCOPY} ARGS -O binary ${TARGET_NAME}.elf ${TARGET_NAME}.bin
