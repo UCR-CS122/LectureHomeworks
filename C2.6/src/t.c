@@ -45,7 +45,7 @@ int main() {
         uprintf(up, "enter a key from this UART : ");
         ugetc(up);
         p = &image1_start;
-        show_bmp(p,229, 321); // display image2
+        show_bmp(p,228, 320); // display image2
     }
 
     while(1); // loop here
