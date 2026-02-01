@@ -60,3 +60,7 @@ dkms.conf
 **/CMakeCache.txt
 **/Makefile
 **/cmake_install.cmake
+**/build
+
+# Other project derivatives
+symbols_names_image*.txt

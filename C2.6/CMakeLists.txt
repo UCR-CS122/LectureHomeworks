@@ -12,9 +12,19 @@ add_executable(${TARGET_NAME}.elf
 add_custom_command(
     TARGET ${TARGET_NAME}.elf
     PRE_LINK
-    COMMAND ${CMAKE_OBJCOPY} ARGS -I binary -O elf32-littlearm -B arm --redefine-syms symbol_names_image0.txt ${PROJECT_SOURCE_DIR}/UC_Riverside_Vert_BluBG_sm.bmp image0.o
-    COMMAND ${CMAKE_OBJCOPY} ARGS -I binary -O elf32-littlearm -B arm --redefine-syms symbol_names_image1.txt ${PROJECT_SOURCE_DIR}/UC_Riverside_Vert_WhtBG_sm.bmp image1.o
+    COMMAND ${CMAKE_OBJCOPY} ARGS -I binary -O elf32-littlearm -B arm --redefine-syms symbol_names_image0.txt ${CMAKE_CURRENT_SOURCE_DIR}/UC_Riverside_Vert_BluBG_sm.bmp image0.o
+    COMMAND ${CMAKE_OBJCOPY} ARGS -I binary -O elf32-littlearm -B arm --redefine-syms symbol_names_image1.txt ${CMAKE_CURRENT_SOURCE_DIR}/UC_Riverside_Vert_WhtBG_sm.bmp image1.o
 )
+
+add_custom_target(symbol_names_image0.txt 
+    ${PROJECT_SOURCE_DIR}/update_symbols.py ${CMAKE_CURRENT_SOURCE_DIR}/UC_Riverside_Vert_BluBG_sm.bmp symbol_names_image0.txt 
+)
+
+add_custom_target(symbol_names_image1.txt 
+    ${PROJECT_SOURCE_DIR}/update_symbols.py ${CMAKE_CURRENT_SOURCE_DIR}/UC_Riverside_Vert_WhtBG_sm.bmp symbol_names_image1.txt 
+)
+
+add_dependencies(${TARGET_NAME}.elf symbol_names_image0.txt symbol_names_image1.txt)
 
 add_custom_command(TARGET ${TARGET_NAME}.elf
     POST_BUILD
@@ -22,7 +32,7 @@ add_custom_command(TARGET ${TARGET_NAME}.elf
 )
 
 set_target_properties(${TARGET_NAME}.elf PROPERTIES
-    ADDITIONAL_CLEAN_FILES ${TARGET_NAME}.bin
+    ADDITIONAL_CLEAN_FILES "${TARGET_NAME}.bin;image0.o;image1.o;symbol_names_image0.txt;symbol_names_image1.txt"
 )
 
 target_include_directories(${TARGET_NAME}.elf PUBLIC  ${PROJECT_SOURCE_DIR}/include include/)
