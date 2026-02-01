@@ -62,5 +62,5 @@ dkms.conf
 **/cmake_install.cmake
 **/build
 
-# Other project derivatives
-symbols_names_image*.txt
+# Other project derived files
+**/symbol_names_image*.txt
