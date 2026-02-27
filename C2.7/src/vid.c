@@ -18,38 +18,44 @@ uint8_t cursor;
 int volatile *fb;
 int row, col, scroll_row;
 unsigned char *font;
-int WIDTH = 640; // scan line width, default to 640
+int WIDTH = 800; // scan line width, default to 640
+int HEIGHT = 600;
 char *tab = "0123456789ABCDEF";
 
 int fbuf_init() {
     int i;
     fb = (int *)0x200000; // frame buffer at 2MB-4MB
     font = _binary_font_start; // font bitmap
-    /********* for 640x480 VGA mode *******************/
+    /********* for 640x480 VGA mode *******************
     *(volatile unsigned int *)(0x1000001c) = 0x2C77;
     *(volatile unsigned int *)(0x10120000) = 0x3F1F3F9C;
     *(volatile unsigned int *)(0x10120004) = 0x090B61DF;
     *(volatile unsigned int *)(0x10120008) = 0x067F1800;
     *(volatile unsigned int *)(0x10120010) = 0x200000; // at 2MB
     *(volatile unsigned int *)(0x10120018) = 0x82B;
-    /********** for 800X600 SVGA mode ******************
+    /********** for 800X600 SVGA mode ******************/
     *(volatile unsigned int *)(0x1000001c) = 0x2CAC; // 800x600
     *(volatile unsigned int *)(0x10120000) = 0x1313A4C4;
     *(volatile unsigned int *)(0x10120004) = 0x0505F6F7;
     *(volatile unsigned int *)(0x10120008) = 0x071F1800;
     *(volatile unsigned int *)(0x10120010) = 0x200000;
     *(volatile unsigned int *)(0x10120018) = 0x82B;
-    **********/
+    /**********/
     cursor = 219; // cursor = row 127 in font bitmap
 }
 
+int setpos(int r, int c) {
+    row = r;
+    col = c;
+}
+
 int clrpix(int x, int y) { // clear pixel at (x,y) 
-    int pix = y*640 + x;
+    int pix = y*WIDTH + x;
     fb[pix] = 0x00000000;
 }
 
 int setpix(int x, int y) { // set pixel at (x,y)
-    int pix = y*640 + x;
+    int pix = y*WIDTH + x;
     if (color==RED)
     fb[pix] = 0x000000FF;
     if (color==BLUE)
@@ -65,7 +71,7 @@ int dchar(unsigned char c, int x, int y) { // display char at (x,y)
     for (r=0; r<16; r++) {
         byte = *(caddress + r);
         for (bit=0; bit<8; bit++){
-            if (byte & (1<<(8-bit)))
+            if (byte & (1<<(7-bit)))
                 setpix(x+bit, y+r);
         }
     }
@@ -78,7 +84,7 @@ int undchar(unsigned char c, int x, int y) { // erase char at (x,y)
     for (row=0; row<16; row++){
         byte = *(caddress + row);
         for (bit=0; bit<8; bit++){
-            if (byte & (1<<(8-bit)))
+            if (byte & (1<<(7-bit)))
                 clrpix(x+bit, y+row);
         }
     }
@@ -86,8 +92,8 @@ int undchar(unsigned char c, int x, int y) { // erase char at (x,y)
 
 int scroll() { // scrow UP one line (the hard way)
     int i;
-    for (i=64*640; i<640*480; i++){
-        fb[i] = fb[i + 640*16];
+    for (i=208*WIDTH; i<WIDTH*HEIGHT; i++){
+        fb[i] = fb[i + WIDTH*16];
     }
 }
 
@@ -134,8 +140,8 @@ int kputc(char c) { // print char at cursor position
     }
     if (c=='\n'){ // new line key
         row++;
-        if (row>=25){
-            row = 24;
+        if (row>=37){
+            row = 36;
             scroll();
         }
         putcursor(cursor);
@@ -155,8 +161,8 @@ int kputc(char c) { // print char at cursor position
     if (col>=80){
         col = 0;
         row++;
-        if (row >= 25){
-            row = 24;
+        if (row >= 37){
+            row = 36;
             scroll();
         }
     }

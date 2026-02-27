@@ -11,6 +11,10 @@
 
 #include "defines.h"
 #include "vid.h"
+#include "uart.h"
+
+UART *out;
+
 
 extern char image0_start;
 int color;
@@ -43,6 +47,7 @@ int fbuf_init() {
     **********/
     cursor = 219; // cursor = row 127 in font bitmap
     row = 12;
+    out = &uart[0];
 }
 
 int setpos(int r, int c) {
@@ -58,13 +63,16 @@ int clrpix(int x, int y) { // clear pixel at (x,y)
 int setpix(int x, int y) { // set pixel at (x,y)
     int pix = y*WIDTH + x;
     if (color==RED)
-    fb[pix] = 0x000000FF;
+        fb[pix] = 0x000000FF;
     if (color==BLUE)
-    fb[pix] = 0x00FF0000;
+        fb[pix] = 0x00FF0000;
     if (color==GREEN)
     fb[pix] = 0x0000FF00;
     if (color==WHITE) 
         fb[pix] = 0x00FFFFFF;
+    if (color==CYAN) 
+        fb[pix] = 0x0000FFFF;
+
 }
 
 int dchar(unsigned char c, int x, int y) { // display char at (x,y)
@@ -135,6 +143,7 @@ int putcursor(unsigned char c) { // set cursor at (row, col)
 }
 
 int kputc(char c) { // print char at cursor position
+    // uprintf(out, "row: %d, col %d\n", row, col);
     clrcursor();
     if (c=='\r'){ // return key
         col=0;
@@ -194,7 +203,6 @@ int kprintx(int x) {
         kputc('0');
     else
         krpx(x);
-    kputc(' ');
 }
 
 int krpu(int x) {
@@ -211,7 +219,6 @@ int kprintu(int x) {
         kputc('0');
     else
         krpu(x);
-    kputc(' ');
 }
 
 int kprinti(int x) {

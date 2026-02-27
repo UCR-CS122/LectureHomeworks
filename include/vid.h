@@ -13,4 +13,10 @@ extern int unkpchar(char c, int ro, int co);
 extern int show_bmp(char *p, int start_row, int start_col);
 extern int WIDTH;
 extern int HEIGHT;
+
+#define RED 0
+#define BLUE 1
+#define GREEN 2
+#define WHITE 3
+#define CYAN 4
 #endif

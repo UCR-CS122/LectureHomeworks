@@ -4,8 +4,6 @@
 
 UART *up;
 
-#define WIDTH 640
-
 int show_bmp(char *p, int start_row, int start_col){// SAME as before
     int h, w, pixel, rsize, i, j;
     unsigned char r, g, b;
@@ -33,6 +31,7 @@ int show_bmp(char *p, int start_row, int start_col){// SAME as before
 int main() {
     char line[64];
     fbuf_init();
+    setpos(13, 0);
 
     uart_init();
     up = &uart[0];

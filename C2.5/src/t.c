@@ -4,6 +4,7 @@ int sum;
 
 #include <string.h> // contains strlen(), strcmp(), etc.
 
+#include "string.h"
 #include "uart.h" // UART driver code file
 
 int main() {

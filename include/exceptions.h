@@ -1,21 +1,5 @@
-#ifndef __DEFINES_H__
-#define __DEFINES_H__
-
-#include <stdint.h>
-#include <uart.h>
-
-extern int kstrcpy(char *dest, char *src);
-
-#define printf kprintf
-#define bcopy  kbcopy
-#define memcpy kmemcpy
-#define strcpy kstrcpy
-#define strlen kstrlen
-
-#define RED 0
-#define BLUE 1
-#define GREEN 2
-#define WHITE 3
+#ifndef __EXCEPTIONS_H__
+#define __EXCEPTIONS_H__
 
 #define VIC_BASE_ADDR 0x10140000
 #define VIC_STATUS    (*((volatile u32 *)(VIC_BASE_ADDR + 0x000)))
@@ -28,6 +12,7 @@ extern int kstrcpy(char *dest, char *src);
 #define SIC_ENSET     (*((volatile u32 *)(SIC_BASE_ADDR + 0x008)))
 #define SIC_PICENSET  (*((volatile u32 *)(SIC_BASE_ADDR + 0x020)))
 
-typedef uint32_t u32;
+extern void lock();
+extern void unlock();
 
 #endif

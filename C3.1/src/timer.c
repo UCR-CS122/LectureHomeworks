@@ -20,10 +20,10 @@ void timer_init() {
         *(tp->base+TVALUE)= 0xFFFFFFFF; // read only; can be any value
         *(tp->base+TRIS) = 0x0; // status
         *(tp->base+TMIS) = 0x0; // status
-        *(tp->base+TLOAD) = 0x15000;
+        *(tp->base+TLOAD) = 0x19;
         // CntlReg=011-0110=|En|Pe|IntE|-|scal=01|32bit|0=wrap|=0x66
         *(tp->base+TCNTL) = 0x66;
-        *(tp->base+TBGLOAD) = 0x15000; // timer counter value
+        *(tp->base+TBGLOAD) = 0x2CC; // timer counter value
         tp->tick = tp->hh = tp->mm = tp->ss = 0; // initialize wall clock
         strcpy((char *)tp->clock, "00:00:00");
     }
@@ -33,7 +33,7 @@ void timer_handler(int n) {
     int i;
     TIMER *t = &timer[n];
     t->tick++; // Assume 120 ticks per second
-    if (t->tick==1){
+    if (t->tick==1200){
         t->tick = 0; t->ss++;
         if (t->ss == 60){
             t->ss = 0; t->mm++;
@@ -45,10 +45,13 @@ void timer_handler(int n) {
         t->clock[4]='0'+(t->mm%10); t->clock[3]='0'+(t->mm/10);
         t->clock[1]='0'+(t->hh%10); t->clock[0]='0'+(t->hh/10);
     }
-    color = n; // display in different color
-    for (i=0; i<8; i++){
-        unkpchar(219, n, 70+i);
-        kpchar(t->clock[i], n, 70+i); // to line n of LCD
+    
+    if (t->tick == 0) {
+        color = n; // display in different color
+        for (i=0; i<8; i++){
+            unkpchar(219, n, 70+i);
+            kpchar(t->clock[i], n, 70+i); // to line n of LCD
+        }
     }
 
     timer_clearInterrupt(n); // clear timer interrupt
